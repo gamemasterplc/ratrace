@@ -625,8 +625,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   max_move_speed: 2.5
   jump_speed: 7
-  move_accel: 2
-  move_decel: 3
+  move_accel: 0.2
+  move_decel: 0.3
 --- !u!1 &1903184212
 GameObject:
   m_ObjectHideFlags: 0
