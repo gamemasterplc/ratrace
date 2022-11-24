@@ -13,7 +13,7 @@ public class ItemBlockScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "player" && !hit && collision.contacts[0].normal.y > 0.8f) {
+        if (collision.gameObject.tag == "player" && !hit && collision.contacts[0].normal.y > 0.5f) {
             PlayerScript player = collision.gameObject.GetComponent<PlayerScript>();
             GetComponent<Renderer>().material.color = new Color(1.0f, 0.65f, 0.0f);
             if (player.GetPowerLevel() == 0) {

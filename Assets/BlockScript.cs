@@ -8,7 +8,7 @@ public class BlockScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "player" && collision.contacts[0].normal.y > 0.8f) {
+        if(collision.gameObject.tag == "player" && collision.contacts[0].normal.y > 0.5f) {
             if(is_coin_block) {
                 //Add coin to coin counter
             }
