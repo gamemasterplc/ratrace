@@ -7,13 +7,17 @@ public class MouseScript : MonoBehaviour
     private Rigidbody rb;
     private float move_timer;
     private bool move_right;
-    float move_length = 2.0f;
-    float mouse_speed = 2.5f;
+    public float move_length = 2.0f;
+    public float mouse_speed = 2.5f;
+
+    public int max_health = 1;
+    public int health = 1;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        health = max_health;
         move_timer = move_length/2;
         move_right = false;
     }

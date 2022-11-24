@@ -174,8 +174,19 @@ public class PlayerScript : MonoBehaviour
         {
             //Do not detect collisions that are highly horizontal
             if(collision.contacts[0].normal.y > 0.25f) {
-                //Destroy enemy
-                Destroy(collision.gameObject);
+                MouseScript mouse = collision.gameObject.GetComponent<MouseScript>();
+                if(mouse.health == 1) {
+                    //Destroy enemy
+                    if(mouse.max_health == 3) {
+                        //Defeated boss
+                        Destroy(collision.gameObject);
+                    } else {
+                        Destroy(collision.gameObject);
+                    }
+                    
+                } else {
+                    mouse.health--;
+                }
                 //Start falling
                 StartFall();
             } else {
