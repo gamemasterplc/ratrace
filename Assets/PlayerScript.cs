@@ -11,6 +11,7 @@ public class PlayerScript : MonoBehaviour
     
 
     private Rigidbody rb;
+    private Color orig_mat_color;
     private float min_x, max_x;
     private bool stopped;
     private float invulnerable_timer;
@@ -28,8 +29,9 @@ public class PlayerScript : MonoBehaviour
         min_x = bounds.min.x;
         max_x = bounds.max.x;
         rb = GetComponent<Rigidbody>();
+        orig_mat_color = GetComponent<Renderer>().material.color;
         invulnerable_timer = 0;
-        power_level = 0;
+        ApplyPowerLevel(0);
         stopped = true;
     }
 
@@ -73,7 +75,7 @@ public class PlayerScript : MonoBehaviour
                 }
             }
         }
-        if(Physics.Raycast(transform.position, Vector3.down, 1.01f) && Input.GetKeyDown(KeyCode.UpArrow))
+        if(Physics.Raycast(transform.position, Vector3.down, transform.localScale.y*1.01f) && Input.GetKeyDown(KeyCode.UpArrow))
         {
             vel.y = jump_speed;
         }
@@ -128,6 +130,26 @@ public class PlayerScript : MonoBehaviour
         rb.velocity = vel;
     }
 
+    private void ApplyPowerLevel(int level)
+    {
+        power_level = level;
+        switch(power_level) {
+            case 0:
+                GetComponent<Renderer>().material.color = orig_mat_color;
+                transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                break;
+
+            case 1:
+                GetComponent<Renderer>().material.color = orig_mat_color;
+                transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
+                break;
+
+            case 2:
+                GetComponent<Renderer>().material.color = Color.red;
+                transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
+                break;
+        }
+    }
     private void DamagePlayer()
     {
         if(invulnerable_timer > 0) {
@@ -136,7 +158,7 @@ public class PlayerScript : MonoBehaviour
         if(power_level == 0) {
             Destroy(gameObject);
         } else {
-            power_level--;
+            ApplyPowerLevel(0);
             invulnerable_timer = 0.5f;
         }
     }
