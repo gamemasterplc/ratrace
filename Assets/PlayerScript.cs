@@ -31,7 +31,7 @@ public class PlayerScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         orig_mat_color = GetComponent<Renderer>().material.color;
         invulnerable_timer = 0;
-        ApplyPowerLevel(2);
+        ApplyPowerLevel(0);
         stopped = true;
     }
 
