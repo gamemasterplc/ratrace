@@ -11,12 +11,25 @@ public class PlayerScript : MonoBehaviour
     
 
     private Rigidbody rb;
+    private float min_x, max_x;
     private bool stopped;
+    private float invulnerable_timer;
+    private int power_level;
 
     // Start is called before the first frame update
     void Start()
     {
+        GameObject level = GameObject.Find("level");
+        Renderer[] renderers = level.GetComponentsInChildren<Renderer>();
+        Bounds bounds = renderers[0].bounds;
+        for(int i=1; i<renderers.Length; i++) {
+            bounds.Encapsulate(renderers[i].bounds);
+        }
+        min_x = bounds.min.x;
+        max_x = bounds.max.x;
         rb = GetComponent<Rigidbody>();
+        invulnerable_timer = 0;
+        power_level = 0;
         stopped = true;
     }
 
@@ -24,6 +37,7 @@ public class PlayerScript : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 vel = rb.velocity;
+        Vector3 pos = transform.position;
         bool is_left = Input.GetKey(KeyCode.LeftArrow);
         bool is_right = Input.GetKey(KeyCode.RightArrow);
         if(!is_left && !is_right) {
@@ -63,6 +77,30 @@ public class PlayerScript : MonoBehaviour
         {
             vel.y = jump_speed;
         }
+        if(pos.x < min_x) {
+            pos.x = min_x;
+            vel.x = 0;
+        }
+        if (pos.x > max_x) {
+            pos.x = max_x;
+            vel.x = 0;
+        }
+        //Delete player if they go below camera
+        if(pos.y < -9.0f) {
+            KillPlayer();
+        }
+        if(invulnerable_timer > 0) {
+            invulnerable_timer -= 0.02f;
+            if(GetComponent<Renderer>().enabled) {
+                GetComponent<Renderer>().enabled = false;
+            } else {
+                GetComponent<Renderer>().enabled = true;
+            }
+        }
+        if(invulnerable_timer <= 0) {
+            GetComponent<Renderer>().enabled = true;
+        }
+        transform.position = pos;
         rb.velocity = vel;
         UpdateCamera();
     }
@@ -70,7 +108,16 @@ public class PlayerScript : MonoBehaviour
     private void UpdateCamera()
     {
         Vector3 pos = Camera.main.transform.position;
+        float cam_width = Camera.main.orthographicSize * Camera.main.aspect;
+        //Make camera follow player
         pos.x = transform.position.x;
+        //Do camera clamping
+        if (pos.x < min_x + cam_width) {
+            pos.x = min_x + cam_width;
+        }
+        if (pos.x > max_x - cam_width) {
+            pos.x = max_x - cam_width;
+        }
         Camera.main.transform.position = pos;
     }
 
@@ -79,6 +126,24 @@ public class PlayerScript : MonoBehaviour
         Vector3 vel = rb.velocity;
         vel.y = 0;
         rb.velocity = vel;
+    }
+
+    private void DamagePlayer()
+    {
+        if(invulnerable_timer > 0) {
+            return;
+        }
+        if(power_level == 0) {
+            Destroy(gameObject);
+        } else {
+            power_level--;
+            invulnerable_timer = 0.5f;
+        }
+    }
+
+    private void KillPlayer()
+    {
+        Destroy(gameObject);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -92,16 +157,14 @@ public class PlayerScript : MonoBehaviour
                 //Start falling
                 StartFall();
             } else {
-                //Destroy player
-                Destroy(gameObject);
+                DamagePlayer();
             }
         }
         if(collision.gameObject.tag == "spike")
         {
             if(collision.contacts[0].normal.y > 0.01f)
             {
-                //Destroy player
-                Destroy(gameObject);
+                DamagePlayer();
             }
         }
         if(collision.gameObject.tag == "block")
