@@ -31,7 +31,7 @@ public class PlayerScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         orig_mat_color = GetComponent<Renderer>().material.color;
         invulnerable_timer = 0;
-        ApplyPowerLevel(0);
+        ApplyPowerLevel(2);
         stopped = true;
     }
 
@@ -89,7 +89,7 @@ public class PlayerScript : MonoBehaviour
         }
         //Delete player if they go below camera
         if(pos.y < -9.0f) {
-            KillPlayer();
+            Kill();
         }
         if(invulnerable_timer > 0) {
             invulnerable_timer -= 0.02f;
@@ -123,7 +123,7 @@ public class PlayerScript : MonoBehaviour
         Camera.main.transform.position = pos;
     }
 
-    private void StartFall()
+    public void StartFall()
     {
         Vector3 vel = rb.velocity;
         vel.y = 0;
@@ -150,82 +150,27 @@ public class PlayerScript : MonoBehaviour
                 break;
         }
     }
-    private void DamagePlayer()
+
+    public void TakeDamage()
     {
         if(invulnerable_timer > 0) {
             return;
         }
-        if(power_level == 0) {
-            Destroy(gameObject);
+        if(GetPowerLevel() == 0) {
+            Kill();
         } else {
             ApplyPowerLevel(0);
             invulnerable_timer = 0.5f;
         }
     }
 
-    private void KillPlayer()
+    public int GetPowerLevel()
     {
-        Destroy(gameObject);
+        return power_level;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void Kill()
     {
-        if(collision.gameObject.tag == "enemy")
-        {
-            //Do not detect collisions that are highly horizontal
-            if(collision.contacts[0].normal.y > 0.25f) {
-                MouseScript mouse = collision.gameObject.GetComponent<MouseScript>();
-                if(mouse.health == 1) {
-                    //Destroy enemy
-                    if(mouse.max_health == 3) {
-                        //Defeated boss
-                        Destroy(collision.gameObject);
-                    } else {
-                        Destroy(collision.gameObject);
-                    }
-                    
-                } else {
-                    mouse.health--;
-                }
-                //Start falling
-                StartFall();
-            } else {
-                DamagePlayer();
-            }
-        }
-        if(collision.gameObject.tag == "spike")
-        {
-            if(collision.contacts[0].normal.y > 0.01f)
-            {
-                DamagePlayer();
-            }
-        }
-        if(collision.gameObject.tag == "block")
-        {
-            //Detect highly downward collisions
-            if(collision.contacts[0].normal.y < -0.8f)
-            {
-                //Destroy brick
-                Destroy(collision.gameObject);
-                //Start falling
-                StartFall();
-            }
-        }
-        if(collision.gameObject.tag == "item_block")
-        {
-            //Detect highly downward collisions
-            if (collision.contacts[0].normal.y < -0.8f)
-            {
-                //Make block orange
-                Renderer renderer_temp = collision.gameObject.GetComponent<Renderer>();
-                Color orange = new Color(1f, 0.65f, 0);
-                if(renderer_temp.material.color != orange)
-                {
-                    renderer_temp.material.color = orange;
-                }
-                //Start falling
-                StartFall();
-            }
-        }
+        Destroy(gameObject);
     }
 }

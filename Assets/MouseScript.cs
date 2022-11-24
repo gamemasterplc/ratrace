@@ -39,4 +39,27 @@ public class MouseScript : MonoBehaviour
         }
         rb.velocity = vel;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "player") {
+            PlayerScript player = collision.gameObject.GetComponent<PlayerScript>();
+            //Do not detect collisions that are highly horizontal
+            if (collision.contacts[0].normal.y < -0.25f) {
+                if (health == 1) {
+                    if(max_health == 3) {
+                        //Do level winning here
+                        Destroy(gameObject);
+                    } else {
+                        Destroy(gameObject);
+                    }
+                } else {
+                    health--;
+                }
+                player.StartFall();
+            } else {
+                player.TakeDamage();
+            }
+        }
+    }
 }

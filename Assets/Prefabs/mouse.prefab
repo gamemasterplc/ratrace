@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 3990629588639534647}
   m_Layer: 0
   m_Name: mouse
-  m_TagString: enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122,3 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfd6a7b95a45184eb5316f51b73a843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  move_length: 2
+  mouse_speed: 2.5
+  max_health: 1
+  health: 1
