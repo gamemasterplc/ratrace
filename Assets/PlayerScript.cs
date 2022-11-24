@@ -77,12 +77,12 @@ public class PlayerScript : MonoBehaviour
         {
             vel.y = jump_speed;
         }
-        if(pos.x < min_x) {
-            pos.x = min_x;
+        if(pos.x < min_x + 0.5f) {
+            pos.x = min_x + 0.5f;
             vel.x = 0;
         }
-        if (pos.x > max_x) {
-            pos.x = max_x;
+        if (pos.x > max_x - 0.5f) {
+            pos.x = max_x - 0.5f;
             vel.x = 0;
         }
         //Delete player if they go below camera
