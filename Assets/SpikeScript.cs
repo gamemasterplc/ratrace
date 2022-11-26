@@ -6,8 +6,13 @@ public class SpikeScript : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "player" && collision.contacts[0].normal.y < -0.5f) {
-            collision.gameObject.GetComponent<PlayerScript>().TakeDamage();
+        if (collision.gameObject.tag == "player") {
+            float hit_angle = (Mathf.Rad2Deg * Mathf.Atan2(collision.contacts[0].normal.y, collision.contacts[0].normal.x)) + 90.0f;
+            //Check if spike collision is sufficiently close to spike
+            if (Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.z, hit_angle)) < 30.0f) {
+                collision.gameObject.GetComponent<PlayerScript>().TakeDamage();
+            }
+            
         }
     }
 }
