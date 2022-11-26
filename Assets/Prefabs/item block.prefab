@@ -104,3 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7f790170eb05cf4ea49968219d1988f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  growth_powerup: {fileID: 6498695536264652996, guid: ded3a533f8ee9ae459b67dddae2c156b,
+    type: 3}
+  fire_powerup: {fileID: 8861492332616588287, guid: af989d0b78e34014d9b8a128d37ce47a,
+    type: 3}

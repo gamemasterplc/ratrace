@@ -42,29 +42,38 @@ public class MouseScript : MonoBehaviour
         rb.velocity = vel;
     }
 
+    private void DoDamaage()
+    {
+        //Player hit top of mouse
+        if (health == 1) {
+            if (max_health == 3) {
+                //Player beat boss mouse
+                GameManager.instance.AdvanceLevel();
+            }
+            //Remove mouse
+            Destroy(gameObject);
+        } else {
+            //Decrease mouse health
+            health--;
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "player") {
             PlayerScript player = collision.gameObject.GetComponent<PlayerScript>();
             if (collision.contacts[0].normal.y < -0.5f) {
-                //Player hit top of mouse
-                if (health == 1) {
-                    if(max_health == 3) {
-                        //Player beat boss mouse
-                        GameManager.instance.AdvanceLevel();
-                    }
-                    //Remove mouse
-                    Destroy(gameObject);
-                } else {
-                    //Decrease mouse health
-                    health--;
-                }
+                DoDamaage();
                 //Player will fall after hitting head
                 player.StartFall();
             } else {
                 //Do damage since player did not hit head
                 player.TakeDamage();
             }
+        }
+        if(collision.gameObject.tag == "fireball") {
+            DoDamaage();
+            Destroy(collision.gameObject);
         }
     }
 }

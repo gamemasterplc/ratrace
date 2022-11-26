@@ -28,7 +28,7 @@ public class ItemBlockScript : MonoBehaviour
                 hit = true;
                 //Set item position to top of block
                 Vector3 item_pos = transform.position;
-                item_pos.y -= 0.75f;
+                item_pos.y += 0.75f;
                 //Spawn item
                 GameObject temp;
                 if (GameManager.instance.power_level == 0) {

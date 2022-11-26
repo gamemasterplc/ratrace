@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
+    [Header("Inspector-Set Value:")]
+    public GameObject fireball_object;
     public float max_move_speed = 2.5f;
     public float jump_speed = 7.0f;
     public float move_accel = 0.2f;
@@ -14,6 +16,7 @@ public class PlayerScript : MonoBehaviour
     private Rigidbody rb;
     private Color orig_mat_color;
     private float min_x, max_x;
+    private float fireball_dir;
     private bool stopped;
     private float invulnerable_timer;
 
@@ -32,6 +35,7 @@ public class PlayerScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         orig_mat_color = GetComponent<Renderer>().material.color;
         invulnerable_timer = 0; //Player starts out not invulnerable
+        fireball_dir = 1; //Set fireballs to spawn to right
         ApplyPowerLevel(GameManager.instance.power_level); //Apply saved power level
         stopped = true; //Player starts stopped
     }
@@ -68,11 +72,13 @@ public class PlayerScript : MonoBehaviour
         } else {
             //Do acceleration
             if(is_left) {
+                fireball_dir = -1;
                 vel.x -= move_accel;
                 if(vel.x < -max_move_speed) {
                     vel.x = -max_move_speed;
                 }
             } else {
+                fireball_dir = 1;
                 vel.x += move_accel;
                 if (vel.x > max_move_speed)  {
                     vel.x = max_move_speed;
@@ -81,10 +87,22 @@ public class PlayerScript : MonoBehaviour
         }
         //Check if player is near ground
         if(Physics.Raycast(transform.position, Vector3.down, transform.localScale.y*1.01f) && Input.GetKeyDown(KeyCode.UpArrow)) {
+            //Do jump
             vel.y = jump_speed;
         }
+        //Make fireball when pressing space at power level 2
+        if (GameManager.instance.power_level == 2 && Input.GetKeyDown(KeyCode.Space)) {
+            //Create fireball
+            GameObject new_object = Instantiate<GameObject>(fireball_object);
+            //Setup fireball position
+            Vector3 obj_pos = transform.position;
+            obj_pos.x += 1.0f * fireball_dir;
+            //Setup fireball movement direction
+            new_object.GetComponent<FireballScript>().max_velocity *= fireball_dir;
+            new_object.transform.position = obj_pos;
+        }
         //Bound player to inside of levels
-        if(pos.x < min_x + 0.5f) {
+        if (pos.x < min_x + 0.5f) {
             pos.x = min_x + 0.5f;
             vel.x = 0;
         }
@@ -141,7 +159,7 @@ public class PlayerScript : MonoBehaviour
         rb.velocity = vel;
     }
 
-    private void ApplyPowerLevel(int level)
+    public void ApplyPowerLevel(int level)
     {
         //Update local and global power level
         GameManager.instance.power_level = level;
