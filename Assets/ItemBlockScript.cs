@@ -24,8 +24,12 @@ public class ItemBlockScript : MonoBehaviour
             if(!hit) {
                 //Make block orange
                 GetComponent<Renderer>().material.color = new Color(1.0f, 0.65f, 0.0f);
+                //Mark block as hit
+                hit = true;
+                //Set item position to top of block
                 Vector3 item_pos = transform.position;
                 item_pos.y -= 0.75f;
+                //Spawn item
                 GameObject temp;
                 if (GameManager.instance.power_level == 0) {
                     //Spawn growth powerup
@@ -35,8 +39,6 @@ public class ItemBlockScript : MonoBehaviour
                     temp = Instantiate<GameObject>(fire_powerup);
                 }
                 temp.transform.position = item_pos;
-                //Mark block as hit
-                hit = true;
             }
             //Do fall when player hits block
             player.StartFall();
