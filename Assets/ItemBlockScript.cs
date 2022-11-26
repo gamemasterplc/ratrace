@@ -8,21 +8,28 @@ public class ItemBlockScript : MonoBehaviour
 
     void Start()
     {
+        //Mark block as not hit
         hit = false;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "player" && !hit && collision.contacts[0].normal.y > 0.5f) {
+        //Check if player hit block sufficiently vertically
+        if (collision.gameObject.tag == "player" && collision.contacts[0].normal.y > 0.5f) {
             PlayerScript player = collision.gameObject.GetComponent<PlayerScript>();
-            GetComponent<Renderer>().material.color = new Color(1.0f, 0.65f, 0.0f);
-            if (player.GetPowerLevel() == 0) {
-                //Spawn growth powerup
-            } else {
-                //Spawn fire powerup
+            if(!hit) {
+                //Make block orange
+                GetComponent<Renderer>().material.color = new Color(1.0f, 0.65f, 0.0f);
+                if (GameManager.instance.power_level == 0) {
+                    //Spawn growth powerup
+                } else {
+                    //Spawn fire powerup
+                }
+                //Mark block as hit
+                hit = true;
             }
+            //Do fall when player hits block
             player.StartFall();
-            hit = true;
         }
     }
 }

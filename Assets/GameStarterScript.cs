@@ -7,6 +7,7 @@ public class GameStarterScript : MonoBehaviour
 {
     public void StartGame()
     {
+        //Setup game variables and load intermission
         GameManager.instance.level = 0;
         GameManager.instance.power_level = 0;
         GameManager.instance.num_coins = 6;

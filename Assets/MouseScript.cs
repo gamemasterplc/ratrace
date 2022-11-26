@@ -14,25 +14,26 @@ public class MouseScript : MonoBehaviour
     public int max_health = 1;
     public int health = 1;
 
-    // Start is called before the first frame update
     void Start()
     {
+        //Initialize parameters
         rb = GetComponent<Rigidbody>();
         health = max_health;
         move_timer = move_length/2;
         move_right = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         Vector3 vel = rb.velocity;
+        //Check if move in this direction has expired
         move_timer -= Time.deltaTime;
-        if(move_timer < 0)
-        {
+        if(move_timer < 0) {
+            //Start move in opposite direction
             move_right = !move_right;
             move_timer = move_length;
         }
+        //Set velocity depending on move direction
         if(move_right) {
             vel.x = mouse_speed;
         } else {
@@ -45,19 +46,23 @@ public class MouseScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "player") {
             PlayerScript player = collision.gameObject.GetComponent<PlayerScript>();
-            //Do not detect collisions that are highly horizontal
-            if (collision.contacts[0].normal.y < -0.25f) {
+            if (collision.contacts[0].normal.y < -0.5f) {
+                //Player hit top of mouse
                 if (health == 1) {
                     if(max_health == 3) {
+                        //Player beat boss mouse
                         GameManager.instance.AdvanceLevel();
-                    } else {
-                        Destroy(gameObject);
                     }
+                    //Remove mouse
+                    Destroy(gameObject);
                 } else {
+                    //Decrease mouse health
                     health--;
                 }
+                //Player will fall after hitting head
                 player.StartFall();
             } else {
+                //Do damage since player did not hit head
                 player.TakeDamage();
             }
         }

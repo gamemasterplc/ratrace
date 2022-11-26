@@ -16,11 +16,10 @@ public class PlayerScript : MonoBehaviour
     private float min_x, max_x;
     private bool stopped;
     private float invulnerable_timer;
-    private int power_level;
 
-    // Start is called before the first frame update
     void Start()
     {
+        //Calculate level bounds
         GameObject level = GameObject.Find("level");
         Renderer[] renderers = level.GetComponentsInChildren<Renderer>();
         Bounds bounds = renderers[0].bounds;
@@ -29,14 +28,14 @@ public class PlayerScript : MonoBehaviour
         }
         min_x = bounds.min.x;
         max_x = bounds.max.x;
+        //Grab rigidbody and original color
         rb = GetComponent<Rigidbody>();
         orig_mat_color = GetComponent<Renderer>().material.color;
-        invulnerable_timer = 0;
-        ApplyPowerLevel(GameManager.instance.power_level);
-        stopped = true;
+        invulnerable_timer = 0; //Player starts out not invulnerable
+        ApplyPowerLevel(GameManager.instance.power_level); //Apply saved power level
+        stopped = true; //Player starts stopped
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         Vector3 vel = rb.velocity;
@@ -45,25 +44,29 @@ public class PlayerScript : MonoBehaviour
         bool is_right = Input.GetKey(KeyCode.RightArrow);
         if(!is_left && !is_right) {
             if(stopped) {
+                //Zero out velocity after player stops 
                 vel.x = 0;
             } else  {
+                //Apply deceleration
                 if (vel.x < 0) {
                     vel.x += move_decel;
                     if (vel.x >= 0) {
+                        //Player has stopped 
                         vel.x = 0;
                         stopped = true;
                     }
-                }
-                else
-                {
+                } else {
+                    //Deceleration must be flipped if player is moving right
                     vel.x -= move_decel;
                     if (vel.x <= 0) {
+                        //Player has stopped 
                         vel.x = 0;
                         stopped = true;
                     }
                 }
             }
         } else {
+            //Do acceleration
             if(is_left) {
                 vel.x -= move_accel;
                 if(vel.x < -max_move_speed) {
@@ -76,10 +79,11 @@ public class PlayerScript : MonoBehaviour
                 }
             }
         }
-        if(Physics.Raycast(transform.position, Vector3.down, transform.localScale.y*1.01f) && Input.GetKeyDown(KeyCode.UpArrow))
-        {
+        //Check if player is near ground
+        if(Physics.Raycast(transform.position, Vector3.down, transform.localScale.y*1.01f) && Input.GetKeyDown(KeyCode.UpArrow)) {
             vel.y = jump_speed;
         }
+        //Bound player to inside of levels
         if(pos.x < min_x + 0.5f) {
             pos.x = min_x + 0.5f;
             vel.x = 0;
@@ -92,17 +96,21 @@ public class PlayerScript : MonoBehaviour
         if(pos.y < -9.0f) {
             Kill();
         }
+        //Do invulnerability update
         if(invulnerable_timer > 0) {
             invulnerable_timer -= 0.02f;
+            //Do invinicibility flashing
             if(GetComponent<Renderer>().enabled) {
                 GetComponent<Renderer>().enabled = false;
             } else {
                 GetComponent<Renderer>().enabled = true;
             }
         }
-        if(invulnerable_timer <= 0) {
+        //Reset mercy invinicibility
+        if (invulnerable_timer <= 0) {
             GetComponent<Renderer>().enabled = true;
         }
+        //Update components
         transform.position = pos;
         rb.velocity = vel;
         UpdateCamera();
@@ -121,11 +129,13 @@ public class PlayerScript : MonoBehaviour
         if (pos.x > max_x - cam_width) {
             pos.x = max_x - cam_width;
         }
+        //Update camera position
         Camera.main.transform.position = pos;
     }
 
     public void StartFall()
     {
+        //Zero out y velocity
         Vector3 vel = rb.velocity;
         vel.y = 0;
         rb.velocity = vel;
@@ -133,19 +143,23 @@ public class PlayerScript : MonoBehaviour
 
     private void ApplyPowerLevel(int level)
     {
-        GameManager.instance.power_level = power_level = level;
-        switch(power_level) {
+        //Update local and global power level
+        GameManager.instance.power_level = level;
+        switch(level) {
             case 0:
+                //Make player small and original color
                 GetComponent<Renderer>().material.color = orig_mat_color;
                 transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                 break;
 
             case 1:
+                //Make player big and original color
                 GetComponent<Renderer>().material.color = orig_mat_color;
                 transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
                 break;
 
             case 2:
+                //Make player big and red
                 GetComponent<Renderer>().material.color = Color.red;
                 transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
                 break;
@@ -154,24 +168,23 @@ public class PlayerScript : MonoBehaviour
 
     public void TakeDamage()
     {
+        //Do not apply damage when player has invulnerability left
         if(invulnerable_timer > 0) {
             return;
         }
-        if(GetPowerLevel() == 0) {
+        if(GameManager.instance.power_level == 0) {
+            //Kill player when small and taking damager
             Kill();
         } else {
+            //Apply damage
             ApplyPowerLevel(0);
             invulnerable_timer = 0.5f;
         }
     }
 
-    public int GetPowerLevel()
-    {
-        return power_level;
-    }
-
     private void Kill()
     {
+        //End level
         GameManager.instance.LoseCoins();
         Destroy(gameObject);
     }

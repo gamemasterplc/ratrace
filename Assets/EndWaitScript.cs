@@ -7,15 +7,16 @@ public class EndWaitScript : MonoBehaviour
 {
     float time;
 
-    // Start is called before the first frame update
     void Start()
     {
+        //Set wait timer
         time = 1.5f;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Start title screen after wait time expires
         time -= Time.deltaTime;
         if(time < 0) {
             SceneManager.LoadScene("title");

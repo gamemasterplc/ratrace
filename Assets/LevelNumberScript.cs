@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class LevelNumberScript : MonoBehaviour
 {
-    // Update is called once per frame
     void Update()
     {
+        //Change label to relevant level
         GetComponent<Text>().text = "Level " + (GameManager.instance.level + 1).ToString();
     }
 }
