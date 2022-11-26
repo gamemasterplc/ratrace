@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class PlayerScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         orig_mat_color = GetComponent<Renderer>().material.color;
         invulnerable_timer = 0;
-        ApplyPowerLevel(0);
+        ApplyPowerLevel(GameManager.instance.power_level);
         stopped = true;
     }
 
@@ -132,7 +133,7 @@ public class PlayerScript : MonoBehaviour
 
     private void ApplyPowerLevel(int level)
     {
-        power_level = level;
+        GameManager.instance.power_level = power_level = level;
         switch(power_level) {
             case 0:
                 GetComponent<Renderer>().material.color = orig_mat_color;
@@ -171,6 +172,7 @@ public class PlayerScript : MonoBehaviour
 
     private void Kill()
     {
+        GameManager.instance.LoseCoins();
         Destroy(gameObject);
     }
 }

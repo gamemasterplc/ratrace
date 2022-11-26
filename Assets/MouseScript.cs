@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MouseScript : MonoBehaviour
 {
@@ -48,8 +49,7 @@ public class MouseScript : MonoBehaviour
             if (collision.contacts[0].normal.y < -0.25f) {
                 if (health == 1) {
                     if(max_health == 3) {
-                        //Do level winning here
-                        Destroy(gameObject);
+                        GameManager.instance.AdvanceLevel();
                     } else {
                         Destroy(gameObject);
                     }
