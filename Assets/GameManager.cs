@@ -52,8 +52,8 @@ public class GameManager : MonoBehaviour
             //Load game over screen if player has run out of coins
             SceneManager.LoadScene("game_over");
         } else {
-            //Restart level
-            StartLevel();
+            //Restart level through intermission
+            SceneManager.LoadScene("intermission");
         }
     }
 }
