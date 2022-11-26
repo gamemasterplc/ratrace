@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ItemBlockScript : MonoBehaviour
 {
+    [Header("Inspector-Set Value:")]
+    public GameObject growth_powerup;
+    public GameObject fire_powerup;
+
     private bool hit;
 
     void Start()
@@ -20,11 +24,17 @@ public class ItemBlockScript : MonoBehaviour
             if(!hit) {
                 //Make block orange
                 GetComponent<Renderer>().material.color = new Color(1.0f, 0.65f, 0.0f);
+                Vector3 item_pos = transform.position;
+                item_pos.y -= 0.75f;
+                GameObject temp;
                 if (GameManager.instance.power_level == 0) {
                     //Spawn growth powerup
+                    temp = Instantiate<GameObject>(growth_powerup);
                 } else {
                     //Spawn fire powerup
+                    temp = Instantiate<GameObject>(fire_powerup);
                 }
+                temp.transform.position = item_pos;
                 //Mark block as hit
                 hit = true;
             }
