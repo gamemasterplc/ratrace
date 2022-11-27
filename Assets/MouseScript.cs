@@ -30,7 +30,7 @@ public class MouseScript : MonoBehaviour
         //Initialize parameters
         rb = GetComponent<Rigidbody>();
         health = max_health;
-        move_timer = (max_move_length + min_move_length) / 2.0f; //
+        move_timer = (max_move_length + min_move_length) / 2.0f; //First mouse move is of average length
         move_right = false;
     }
 
