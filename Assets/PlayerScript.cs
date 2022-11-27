@@ -19,6 +19,7 @@ public class PlayerScript : MonoBehaviour
     private float fireball_dir;
     private bool stopped;
     private float invulnerable_timer;
+    private float fireball_cooldown_timer;
 
     void Start()
     {
@@ -35,6 +36,7 @@ public class PlayerScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         orig_mat_color = GetComponent<Renderer>().material.color;
         invulnerable_timer = 0; //Player starts out not invulnerable
+        fireball_cooldown_timer = 0;
         fireball_dir = 1; //Set fireballs to spawn to right
         ApplyPowerLevel(GameManager.instance.power_level); //Apply saved power level
         stopped = true; //Player starts stopped
@@ -90,16 +92,24 @@ public class PlayerScript : MonoBehaviour
             //Do jump
             vel.y = jump_speed;
         }
-        //Make fireball when pressing space at power level 2 when moving slowly
-        if (GameManager.instance.power_level == 2 && Mathf.Abs(vel.x) < 4.5f && Input.GetKeyDown(KeyCode.Space)) {
-            //Create fireball
-            GameObject new_object = Instantiate<GameObject>(fireball_object);
-            //Setup fireball position
-            Vector3 obj_pos = transform.position;
-            obj_pos.x += 1.0f * fireball_dir;
-            //Setup fireball movement direction
-            new_object.GetComponent<FireballScript>().max_velocity = 4.5f*fireball_dir;
-            new_object.transform.position = obj_pos;
+        if(fireball_cooldown_timer <= 0) {
+            //Make fireball when pressing space at power level 2 when moving slowly
+            if (GameManager.instance.power_level == 2 && Mathf.Abs(vel.x) < 4.5f && Input.GetKeyDown(KeyCode.Space)) {
+                //Create fireball
+                GameObject new_object = Instantiate<GameObject>(fireball_object);
+                //Setup fireball position
+                Vector3 obj_pos = transform.position;
+                obj_pos.x += 1.0f * fireball_dir;
+                //Setup fireball movement direction
+                new_object.GetComponent<FireballScript>().max_velocity *= fireball_dir;
+                new_object.transform.position = obj_pos;
+                fireball_cooldown_timer = 0.25f;
+            }
+        } else {
+            fireball_cooldown_timer -= 0.02f;
+        }
+        if(fireball_cooldown_timer < 0) {
+            fireball_cooldown_timer = 0;
         }
         //Bound player to inside of levels
         if (pos.x < min_x + 0.5f) {
