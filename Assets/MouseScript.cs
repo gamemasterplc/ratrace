@@ -9,8 +9,7 @@ public class MouseScript : MonoBehaviour
     private float move_timer;
     private bool move_right;
     private float min_x, max_x;
-    public float min_move_length = 2.0f;
-    public float max_move_length = 3.0f;
+    public float move_length = 2.0f;
     public float mouse_speed = 2.5f;
 
     public int max_health = 1;
@@ -30,7 +29,7 @@ public class MouseScript : MonoBehaviour
         //Initialize parameters
         rb = GetComponent<Rigidbody>();
         health = max_health;
-        move_timer = (max_move_length + min_move_length) / 2.0f; //First mouse move is of average length
+        move_timer = move_length / 2.0f; //First move is of half length
         move_right = false;
     }
 
@@ -41,9 +40,13 @@ public class MouseScript : MonoBehaviour
         //Check if move in this direction has expired
         move_timer -= Time.deltaTime;
         if(move_timer < 0) {
-            //Start move in opposite direction
-            move_right = !move_right;
-            move_timer = Random.Range(min_move_length, max_move_length);
+            //Start move in random direction
+			if(Random.value >= 0.5f) {
+				move_right = true;
+			} else {
+				move_right = false;
+			}
+            move_timer = move_length;
         }
         //Set velocity depending on move direction
         if(move_right) {
@@ -52,7 +55,7 @@ public class MouseScript : MonoBehaviour
             vel.x = -mouse_speed;
         }
         //Stop mouse at level edges (0.5285455f is half of the collider height)
-        if (pos.x < min_x+(transform.localScale.x * 0.5285455f)) {
+        if (pos.x < min_x + (transform.localScale.x * 0.5285455f)) {
             pos.x = min_x + (transform.localScale.x * 0.5285455f);
         }
         if (pos.x > max_x - (transform.localScale.x * 0.5285455f)) {
