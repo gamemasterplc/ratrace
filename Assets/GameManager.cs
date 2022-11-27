@@ -34,6 +34,10 @@ public class GameManager : MonoBehaviour
             case 1:
                 SceneManager.LoadScene("level_2");
                 break;
+
+            case 2:
+                SceneManager.LoadScene("level_3");
+                break;
         }
     }
 
