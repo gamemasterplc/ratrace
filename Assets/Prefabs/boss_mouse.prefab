@@ -122,8 +122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfd6a7b95a45184eb5316f51b73a843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  min_move_length: 2.5
-  max_move_length: 4
+  min_move_length: 2
+  max_move_length: 3
   mouse_speed: 4
   max_health: 3
   health: 3
