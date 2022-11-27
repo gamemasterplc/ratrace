@@ -13,12 +13,12 @@ public class FireballScript : MonoBehaviour
     {
         //Setup velocity
         rb = GetComponent<Rigidbody>();
-        rb.velocity = new Vector3(max_velocity, 0, 0);
     }
 
     void Start()
     {
         bounce_count = 5;
+        rb.velocity = new Vector3(max_velocity, 0, 0);
     }
 
     private void OnCollisionEnter(Collision collision)
