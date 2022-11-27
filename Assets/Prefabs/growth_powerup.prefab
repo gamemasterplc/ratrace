@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   is_fireball_powerup: 0
-  item_speed: 5
+  item_speed: 4
 --- !u!54 &307271289420155216
 Rigidbody:
   m_ObjectHideFlags: 0

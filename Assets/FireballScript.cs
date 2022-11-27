@@ -6,7 +6,7 @@ public class FireballScript : MonoBehaviour
 {
     public float max_velocity = 4.5f;
 
-    private float timer;
+    private int bounce_count;
     private Rigidbody rb;
 
     void Awake()
@@ -18,17 +18,7 @@ public class FireballScript : MonoBehaviour
 
     void Start()
     {
-        //Setup timer for destroying fireball
-        timer = 5.0f;
-    }
-
-    private void Update()
-    {
-        //Update timer
-        timer -= Time.deltaTime;
-        if(timer < 0) {
-            Destroy(gameObject);
-        }
+        bounce_count = 5;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -36,9 +26,11 @@ public class FireballScript : MonoBehaviour
         //Reflect fireball velocity around Y axis
         Vector3 new_vel = collision.relativeVelocity;
         new_vel.x = -new_vel.x;
-        if(new_vel.y > 4.0f) {
-            new_vel.y = 4.0f;
-        }
         rb.velocity = new_vel;
+        //Destroy when ball runs out of bounces
+        bounce_count--;
+        if(bounce_count == 0) {
+            Destroy(gameObject);
+        }
     }
 }

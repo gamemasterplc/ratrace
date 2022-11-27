@@ -90,8 +90,8 @@ public class PlayerScript : MonoBehaviour
             //Do jump
             vel.y = jump_speed;
         }
-        //Make fireball when pressing space at power level 2
-        if (GameManager.instance.power_level == 2 && Input.GetKeyDown(KeyCode.Space)) {
+        //Make fireball when pressing space at power level 2 when moving slowly
+        if (GameManager.instance.power_level == 2 && Mathf.Abs(vel.x) < max_move_speed/2 && Input.GetKeyDown(KeyCode.Space)) {
             //Create fireball
             GameObject new_object = Instantiate<GameObject>(fireball_object);
             //Setup fireball position
