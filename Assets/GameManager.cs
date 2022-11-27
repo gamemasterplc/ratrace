@@ -38,6 +38,10 @@ public class GameManager : MonoBehaviour
             case 2:
                 SceneManager.LoadScene("level_3");
                 break;
+
+            case 3:
+                SceneManager.LoadScene("level_4");
+                break;
         }
     }
 
@@ -45,7 +49,12 @@ public class GameManager : MonoBehaviour
     {
         //Load intermission with next level
         GameManager.instance.level++;
-        SceneManager.LoadScene("intermission");
+        if(GameManager.instance.level >= 4) {
+            SceneManager.LoadScene("you_win");
+        } else {
+            SceneManager.LoadScene("intermission");
+        }
+        
     }
 
     public void LoseCoins()

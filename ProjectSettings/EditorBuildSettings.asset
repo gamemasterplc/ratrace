@@ -18,9 +18,15 @@ EditorBuildSettings:
     path: Assets/Scenes/level_3.unity
     guid: 66a914a7ccebf60438010f9feb95acb9
   - enabled: 1
+    path: Assets/Scenes/level_4.unity
+    guid: dd5b3acaa5390464d92f136053cb5b91
+  - enabled: 1
     path: Assets/Scenes/intermission.unity
     guid: 7d1f9f8779d1bba4098866b4dddcf542
   - enabled: 1
     path: Assets/Scenes/game_over.unity
     guid: b9f5ca74da1de8d4ab397b917ccf07fb
+  - enabled: 1
+    path: Assets/Scenes/you_win.unity
+    guid: bcba5729b86f0154b8dea04915d41e0e
   m_configObjects: {}
