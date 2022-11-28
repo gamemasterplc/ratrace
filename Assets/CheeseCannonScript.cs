@@ -19,7 +19,7 @@ public class CheeseCannonScript : MonoBehaviour
         shoot_timer -= Time.deltaTime;
         if(shoot_timer < 0) {
             Vector3 cheese_pos = transform.position;
-            cheese_pos.x -= 1.0f;
+            cheese_pos.x -= 1.1f;
             cheese_pos.y += 0.625f;
             GameObject temp = Instantiate<GameObject>(cheese_object);
             temp.transform.position = cheese_pos;
