@@ -6,7 +6,7 @@ public class CheeseCannonScript : MonoBehaviour
 {
     [Header("Inspector-Set Value:")]
     public GameObject cheese_object;
-    public float max_shoot_timer = 1.5f;
+    public float max_shoot_timer = 2.0f;
     private float shoot_timer;
 
     void Start()
